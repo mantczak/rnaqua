@@ -1,5 +1,5 @@
 package edu.put.ma;
-
+import java.lang.System;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,6 +42,7 @@ public class Assessment {
     private WebTarget webTarget = null;
 
     Assessment() {
+System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
         this.properties = new Properties();
         loadProperties();
         this.webTarget = ServicesProvider.getWebTarget(getServicesProvider());
@@ -111,6 +112,8 @@ public class Assessment {
         if (structuresSet.getStructureListSize() > 0) {
             Response response = webTarget.path("services").path("rnalyzer").request().post(Entity.json(null));
             final URI location = response.getLocation();
+		System.out.println(response.getStatus());
+System.out.println(response.toString());
             final String resourceUri = StringUtils.difference(webTarget.getUri().toString(),
                     location.toString());
             try {
