@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Properties;
-
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -108,10 +107,14 @@ public class Assessment {
     private void process(final Command command, final StructuresSet structuresSet, final String serviceCode,
             final String outputFilePath, final String outputFileExtension) {
         if (structuresSet.getStructureListSize() > 0) {
-            Response response = webTarget.path("services").path("rnalyzer").request().post(Entity.json(null));
+            Response response = webTarget.path("services").path("rnalyzer").request().header("Content-Length", "0").post(Entity.json(null));
             final URI location = response.getLocation();
             final String resourceUri = StringUtils.difference(webTarget.getUri().toString(),
-                    location.toString());
+                    webTarget.getUri().toString().startsWith("https") ? location.toString().replace("http:", "https:") : location.toString());
+		LOGGER.info(location.toString());
+		LOGGER.info(webTarget.getUri().toString());
+		LOGGER.info(resourceUri);
+		LOGGER.info("------");
             try {
                 String responseString = "Service does not exist or server is shutdown!";
                 if (location != null) {
@@ -125,9 +128,10 @@ public class Assessment {
                 } else if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
                     responseString = "Resource you are trying to connect does not exist. Try to initialize it first!";
                     LOGGER.info(responseString);
-                } else {
+                } else { //TODO: there should be a HTTP200 status check here, because the code passes through here if server returns HTTP5xx or anything not catched above
+		    LOGGER.info(response.toString());
                     saveOutput(command, outputFilePath, response);
-                    LOGGER.info("Command processed properly");
+                    LOGGER.info("Command processed properly - but really?");
                 }
             } catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
