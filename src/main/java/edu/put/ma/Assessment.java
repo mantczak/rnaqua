@@ -31,6 +31,8 @@ public class Assessment {
 
     public static final String SUPPORTED_IMAGE_EXTENSION = "svg";
 
+    public static final String SERVICE_URI = "SERVICE_URI";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(Assessment.class);
 
     private Properties properties;
@@ -80,7 +82,11 @@ public class Assessment {
     }
 
     private String getServicesProvider() {
-        return getPropertyValueByKey("servicesProvider");
+        if(System.getenv().containsKey(SERVICE_URI)) {
+            return System.getenv(SERVICE_URI);
+        } else {
+            return  getPropertyValueByKey("servicesProvider");
+        }
     }
 
     public static void main(final String[] args) {
@@ -111,10 +117,10 @@ public class Assessment {
             final URI location = response.getLocation();
             final String resourceUri = StringUtils.difference(webTarget.getUri().toString(),
                     webTarget.getUri().toString().startsWith("https") ? location.toString().replace("http:", "https:") : location.toString());
-		LOGGER.info(location.toString());
-		LOGGER.info(webTarget.getUri().toString());
-		LOGGER.info(resourceUri);
-		LOGGER.info("------");
+            LOGGER.info(location.toString());
+            LOGGER.info(webTarget.getUri().toString());
+            LOGGER.info(resourceUri);
+            LOGGER.info("------");
             try {
                 String responseString = "Service does not exist or server is shutdown!";
                 if (location != null) {
@@ -128,8 +134,11 @@ public class Assessment {
                 } else if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
                     responseString = "Resource you are trying to connect does not exist. Try to initialize it first!";
                     LOGGER.info(responseString);
-                } else { //TODO: there should be a HTTP200 status check here, because the code passes through here if server returns HTTP5xx or anything not catched above
-		    LOGGER.info(response.toString());
+                } else if (response.getStatus() >= 400) {
+                    LOGGER.warn("Service returned non-success status code " + response.getStatus());
+                    throw new Exception(response.toString());
+                } else {
+		            LOGGER.info(response.toString());
                     saveOutput(command, outputFilePath, response);
                     LOGGER.info("Command processed properly - but really?");
                 }
