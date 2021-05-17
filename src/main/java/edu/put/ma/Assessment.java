@@ -1,11 +1,9 @@
 package edu.put.ma;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Properties;
-
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -32,6 +30,8 @@ import edu.put.ma.utils.ServicesProvider;
 public class Assessment {
 
     public static final String SUPPORTED_IMAGE_EXTENSION = "svg";
+
+    public static final String SERVICE_URI = "SERVICE_URI";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Assessment.class);
 
@@ -82,7 +82,11 @@ public class Assessment {
     }
 
     private String getServicesProvider() {
-        return getPropertyValueByKey("servicesProvider");
+        if(System.getenv().containsKey(SERVICE_URI)) {
+            return System.getenv(SERVICE_URI);
+        } else {
+            return  getPropertyValueByKey("servicesProvider");
+        }
     }
 
     public static void main(final String[] args) {
@@ -109,10 +113,14 @@ public class Assessment {
     private void process(final Command command, final StructuresSet structuresSet, final String serviceCode,
             final String outputFilePath, final String outputFileExtension) {
         if (structuresSet.getStructureListSize() > 0) {
-            Response response = webTarget.path("services").path("rnalyzer").request().post(Entity.json(null));
+            Response response = webTarget.path("services").path("rnalyzer").request().header("Content-Length", "0").post(Entity.json(null));
             final URI location = response.getLocation();
             final String resourceUri = StringUtils.difference(webTarget.getUri().toString(),
-                    location.toString());
+                    webTarget.getUri().toString().startsWith("https") ? location.toString().replace("http:", "https:") : location.toString());
+            LOGGER.info(location.toString());
+            LOGGER.info(webTarget.getUri().toString());
+            LOGGER.info(resourceUri);
+            LOGGER.info("------");
             try {
                 String responseString = "Service does not exist or server is shutdown!";
                 if (location != null) {
@@ -126,9 +134,13 @@ public class Assessment {
                 } else if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
                     responseString = "Resource you are trying to connect does not exist. Try to initialize it first!";
                     LOGGER.info(responseString);
+                } else if (response.getStatus() >= 400) {
+                    LOGGER.warn("Service returned non-success status code " + response.getStatus());
+                    throw new Exception(response.toString());
                 } else {
+		            LOGGER.info(response.toString());
                     saveOutput(command, outputFilePath, response);
-                    LOGGER.info("Command processed properly");
+                    LOGGER.info("Command processed properly - but really?");
                 }
             } catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
