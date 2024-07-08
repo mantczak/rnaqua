@@ -34,8 +34,9 @@
 	</developers>
 
 	<properties>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.release>9</maven.compiler.release>
+		<maven.compiler.source>1.9</maven.compiler.source>
+		<maven.compiler.target>1.9</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.main.class>edu.put.ma.Assessment</project.main.class>
 		<slf4j.version>1.7.12</slf4j.version>
@@ -45,6 +46,18 @@
 	</properties>
 
 	<dependencies>
+<dependency>
+    <groupId>javax.xml.bind</groupId>
+    <artifactId>jaxb-api</artifactId>
+    <version>2.3.1</version>
+</dependency>
+<dependency>
+    <groupId>org.glassfish.jaxb</groupId>
+    <artifactId>jaxb-runtime</artifactId>
+    <version>2.3.1</version>
+    <scope>runtime</scope>
+</dependency>
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -96,7 +109,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.16.6</version>
+			<version>1.16.22</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -133,8 +146,9 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.2</version>
+				<version>3.12.0</version>
 				<configuration>
+					<release>${maven.compiler.release}</release>
 					<source>${maven.compiler.source}</source>
 					<target>${maven.compiler.target}</target>
 					<encoding>${project.build.sourceEncoding}</encoding>
@@ -205,7 +219,7 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>java-8</id>
+			<id>java-9</id>
 			<dependencies>
 				<dependency>
 					<groupId>xerces</groupId>
