@@ -5,6 +5,7 @@ RNA QUality Assessment tool (RNAQUA) is RESTful web service client developed in 
 1. A single 3D structure-based analysis.
   - A comprehensive validation of the input RNA 3D structure(s) to report all PDB format inconsistencies (*PDB-VALIDATION*). 
   - A computation of an overall clash score (*CLASH-SCORE*), i.e., number of bad overlaps per 1000 atoms, provided by [MolProbity][molprobity].
+  - A computation of nucleic acids-oriented MolProbity scores (*MOLPROBITY-SCORES*).
   - A sequence-based analysis allowing to investigate a sequence of RNA 3D structure(s) (*SEQUENCE*) or a set of incontinuous RNA 3D substructures specified by the user (*FRAGMENT*).
   - An extraction (*ORIGINAL-3D*) and unification (*RENUMERATED-3D*) of RNA 3D structure(s) useful during analysis of input RNA 3D models or a set of incontinuous 3D substructures differing in sequence, distribution of chains, and numbering of residues.
 
@@ -85,7 +86,7 @@ The tool provides the following analysis modes: (1) a single 3D structure-based 
 - a single 3D structure-based analysis
 
 ```
- -c,--command <arg>                                  supported commands: PDB-VALIDATION, CLASH-SCORE, SEQUENCE, 
+ -c,--command <arg>                                  supported commands: PDB-VALIDATION, CLASH-SCORE, MOLPROBITY-SCORES, SEQUENCE, 
                                                      FRAGMENT, ORIGINAL-3D, RENUMERATED-3D
  -s,--single-model-file-path <arg>                   single model PDB file path
  -d,--multiple-models-directory-path <arg>           multiple PDB models directory path
