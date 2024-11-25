@@ -131,7 +131,7 @@ public class AnalysisInputModelImpl extends CommonInputModelImpl implements Anal
     }
 
     private boolean isAppropriateCommandUsed() {
-        return CommandEnum.Measure.CS == getCommand() || CommandEnum.PDB_VALIDATION == getCommand()
+        return CommandEnum.Measure.CS == getCommand() || CommandEnum.Measure.MS == getCommand() || CommandEnum.PDB_VALIDATION == getCommand()
                 || ArrayUtils.getEnumNames(CommandEnum.Sequence.class).contains(getCommand().toString())
                 || ArrayUtils.getEnumNames(CommandEnum.Structure3d.class).contains(getCommand().toString());
     }

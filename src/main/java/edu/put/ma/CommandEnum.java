@@ -49,7 +49,8 @@ public enum CommandEnum implements Command {
 
     public enum Measure implements Command {
 
-        CS(new Mapping("CLASH-SCORE", "clashscore")), RMSD(new Mapping("ROOT-MEAN-SQUARE-DEVIATION", "rmsd")), INF(
+    	MS(new Mapping("MOLPROBITY-SCORES", "molprobity")), CS(new Mapping("CLASH-SCORE", "clashscore")), 
+    	RMSD(new Mapping("ROOT-MEAN-SQUARE-DEVIATION", "rmsd")), INF(
                 new Mapping("ALL-INTERACTION-NETWORK-FIDELITY-SCORES-AT-ONCE", "inf")), INF_WC(new Mapping(
                 "INTERACTION-NETWORK-FIDELITY-WATSON-CRICK", "infwc")), INF_NWC(new Mapping(
                 "INTERACTION-NETWORK-FIDELITY-NON-WATSON-CRICK", "infnwc")), INF_STACKING(new Mapping(

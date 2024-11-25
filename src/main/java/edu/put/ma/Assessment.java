@@ -179,7 +179,8 @@ public class Assessment {
             } else {
                 return "application/zip";
             }
-        }
+        } else if (CommandEnum.Measure.MS == command)
+            return MediaType.APPLICATION_JSON;
         return MediaType.APPLICATION_XML;
     }
 

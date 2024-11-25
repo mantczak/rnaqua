@@ -79,6 +79,30 @@ public class AssessmentTest {
     }
 
     @Test
+    public void testMolProbityScoresOfSingleContinousModel() throws Exception {
+        final AnalysisInputModelImpl.Builder analysisInputModelBuilder = new AnalysisInputModelImpl.Builder();
+        analysisInputModelBuilder
+                .singlePdbModelFilePath(
+                        "SINGLE-STRUCTURE-ANALYSIS/SCORES/MOLPROBITY-SCORES/continuous-models/4_adamiak_1_rpr.pdb")
+                .outputFilePath("4_adamiak_1_rpr.json").considerAtomsSupportedByRNAPuzzlesOnly(true)
+                .command(CommandEnum.Measure.MS);
+        analyse(analysisInputModelBuilder,
+                "./SINGLE-STRUCTURE-ANALYSIS/SCORES/MOLPROBITY-SCORES/expected/continuous-models");
+    }
+
+    @Test
+    public void testMolProbityScoresOfMultipleContinousModels() throws Exception {
+        final AnalysisInputModelImpl.Builder analysisInputModelBuilder = new AnalysisInputModelImpl.Builder();
+        analysisInputModelBuilder
+                .multiplePdbModelsDirectoryPath(
+                        "SINGLE-STRUCTURE-ANALYSIS/SCORES/MOLPROBITY-SCORES/continuous-models")
+                .outputFilePath("4_adamiak_1_rpr.json").considerAtomsSupportedByRNAPuzzlesOnly(true)
+                .command(CommandEnum.Measure.MS);
+        analyse(analysisInputModelBuilder,
+                "./SINGLE-STRUCTURE-ANALYSIS/SCORES/MOLPROBITY-SCORES/expected/continuous-models");
+    }
+
+    @Test
     public void testClashScoreOfSingleIncontinousModel() throws Exception {
         final AnalysisInputModelImpl.Builder analysisInputModelBuilder = new AnalysisInputModelImpl.Builder();
         analysisInputModelBuilder
